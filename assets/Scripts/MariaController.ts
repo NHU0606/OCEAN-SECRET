@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, SystemEvent, v2, Vec2 } from 'cc';
+import { _decorator, Component, Contact2DType, EventKeyboard, input, Input, IPhysics2DContact, KeyCode, macro, Node, PolygonCollider2D, v2, Vec2, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum MariaDirection {
@@ -12,27 +12,85 @@ enum MariaDirection {
 
 @ccclass('MariaController')
 export class MariaController extends Component {
+    @property({type: Node})
+    public mariaNode: Node = null;
+
+    @property({type: PolygonCollider2D})
+    public collider: PolygonCollider2D = null;
+
     @property
-    speed: number = 100;
+    private speed: number = 60;
 
-    private direction: Vec2 = new Vec2(0, 0);
+    private direction: Vec3 = new Vec3(0, 0, 0);
 
-    // protected onLoad(): void {
-    //     SystemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this)
-    //     SystemEvent.on(SystemEvent.EventType.KEY_UP, this.onKeyUp, this)
-    // }
-
-    // protected onDestroy(): void {
-    //     SystemEvent.off(SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
-    //     SystemEvent.off(SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
-    // }
-
-    protected onKeyDown(): void {
-
+    protected onLoad(): void {
+        input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
+        input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
     }
 
-    protected onKeyUp(): void {
+    protected onDestroy(): void {
+        input.off(Input.EventType.KEY_DOWN, this.onKeyDown, this);
+        input.off(Input.EventType.KEY_UP, this.onKeyUp, this);
+    }
+
+    protected onKeyDown(event: EventKeyboard): void {
+        switch (event.keyCode){
+            case KeyCode.ARROW_LEFT:
+                this.direction.x = -1;
+                this.direction.y = 0;
+                this.node.angle = 180;
+                this.node.scale = new Vec3 (1, -1, 0);
+                break;
+            case KeyCode.ARROW_RIGHT:
+                this.direction.x = 1;
+                this.direction.y = 0;
+                this.node.angle = 0;
+                this.node.scale = new Vec3 (1, 1, 0);
+                break;
+            case KeyCode.ARROW_UP:
+                this.direction.x = 0;
+                this.direction.y = 1;
+                this.node.angle = 90;
+                this.node.scale = new Vec3 (1, 1, 0);
+                break;
+            case KeyCode.ARROW_DOWN:
+                this.direction.x = 0;
+                this.direction.y = -1;
+                this.node.angle = 270;
+                this.node.scale = new Vec3 (1, -1, 0);
+                break;
+        }
+    }
+
+    protected onKeyUp(event: EventKeyboard): void {
+        switch (event.keyCode){
+            case KeyCode.ARROW_LEFT:
+                this.direction.x = 0;
+                break;
+            case KeyCode.ARROW_RIGHT:
+                this.direction.x = 0;
+                break;
+            case KeyCode.ARROW_UP:
+                this.direction.y = 0;
+                break;
+            case KeyCode.ARROW_DOWN:
+                this.direction.y = 0;
+                break;
+        }
+    }
+
+    protected onCollisionEnter(otherCollider: PolygonCollider2D): void {
+        console.log('aaa');
+    }
+    
+    protected update(dt: number): void {
+        const displacement = this.direction.multiplyScalar(this.speed * dt);
+        this.node.position = this.node.position.add(displacement);  
         
+        if (this.collider) {
+            this.collider.offset = new Vec2(this.node.position.x, this.node.position.y);
+            console.log('aaa');
+        }
     }
 }
 
