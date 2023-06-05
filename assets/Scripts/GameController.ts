@@ -3,17 +3,26 @@ import { MariaController } from './MariaController';
 import { GameModel } from './GameModel';
 import { PauseController } from './PauseController';
 import { FishPrefabController } from './FishPrefabController';
+import { AudioController } from './AudioController';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component {
     private isIconShown: boolean = false;
     private isMuted: boolean = false;
-    private varVolume: number;
-    private varVolumeArray: number[] = [];
+    private variableVolume: number;
+    private variableVolumeArray: number[] = [];
     private convertVolume: number;
     private fishArray: FishPrefabController[] = [];
 
+    @property({type: AudioController})
+    private audioController: AudioController;
+
+    @property({type: Button})
+    private iconShow: Button = null;    
+
+    @property({type: Button})
+    private iconOff: Button = null;  
   
     @property({type:GameModel})
     private GameModel: GameModel;
@@ -24,60 +33,57 @@ export class GameController extends Component {
     @property({type: Sprite})
     private listSea: Sprite[] = [null, null];
 
+    protected onLoad() : void  {
+        const audioSrc = this.node.getComponent(AudioSource)
+        this.GameModel.AudioBackGround = audioSrc;
+    }
+
     protected start(): void {
         this.schedule(function(){
             this.spawnFish();
         }, math.randomRangeInt(2, 3))  
 
-        var getVolume = sys.localStorage.getItem('volume');
+        var getVolumne = sys.localStorage.getItem('volume')
 
-        if(getVolume){
-            this.varVolumeArray = JSON.parse(getVolume)
-            localStorage.setItem('volume', JSON.stringify(this.varVolumeArray))
-        } else {
-            this.GameModel.AudioBackGround.volume = 1;
-            this.GameModel.AudioOnBtn.node.active = true;
-            this.GameModel.AudioOffBtn.node.active = false;
+        if(getVolumne){
+            this.variableVolumeArray = JSON.parse(getVolumne)
+            localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
+        
         }
-
-        this.convertVolume = this.varVolumeArray[this.varVolumeArray.length - 1]
-        if(this.convertVolume === 1) {
-            this.GameModel.AudioOnBtn.node.active = true;
-            this.GameModel.AudioOffBtn.node.active = false;
-            this.GameModel.AudioBackGround.volume = 1;
-        } else if(this.convertVolume === 0) {
-            this.GameModel.AudioOnBtn.node.active = false;
-            this.GameModel.AudioOffBtn.node.active = true;
-            this.GameModel.AudioBackGround.volume = 0;
+        else {
+            this.audioController.playAudio();
+            this.iconShow.node.active = true;
+            this.iconOff.node.active = false;
         }
-    }
-
-    protected onLoad(): void {
-        this.GameModel.AudioOnBtn.node.active = true;
-        this.GameModel.AudioOffBtn.node.active = false;
+        
+        this.convertVolume = this.variableVolumeArray[this.variableVolumeArray.length - 1]
+        if(this.convertVolume === 1){
+            this.iconShow.node.active = true;
+            this.iconOff.node.active = false;
+            this.audioController.playAudio();
+        }
+        else if(this.convertVolume === 0) {
+            this.iconShow.node.active = false;
+            this.iconOff.node.active = true;
+            this.audioController.pauseAudio();
+        }
     }
 
     onClickIconPause(){
-        let opacityBtnOff = this.GameModel.AudioOffBtn.getComponent(UIOpacity)
-        let opacityBtnOn = this.GameModel.AudioOnBtn.getComponent(UIOpacity)
+        let opacityBtnOff = this.iconOff.getComponent(UIOpacity)
+        let opacityBtnOn = this.iconShow.getComponent(UIOpacity)
         
         this.pause.IsPause = !this.pause.IsPause;
         if(this.pause.IsPause){
-            this.GameModel.AudioOffBtn.interactable = false;
-            this.GameModel.AudioOnBtn.interactable = false;
+            this.iconOff.interactable = false;
+            this.iconShow.interactable = false;
             opacityBtnOff.opacity = 0;
             opacityBtnOn.opacity = 0;
-            this.GameModel.AudioOffBtn.node.active = false;
-            this.GameModel.AudioOnBtn.node.active = false;
-            this.GameModel.AudioBackGround.pause();
             director.pause();
         } else {
             director.resume();
-            this.GameModel.AudioOffBtn.node.active = true;
-            this.GameModel.AudioOnBtn.node.active = true;
-            this.GameModel.AudioOffBtn.interactable = true;
-            this.GameModel.AudioOnBtn.interactable = true;
-            this.GameModel.AudioBackGround.play();
+            this.iconOff.interactable = true;
+            this.iconShow.interactable = true;
             opacityBtnOff.opacity = 255;
             opacityBtnOn.opacity = 255;
         }
@@ -92,42 +98,23 @@ export class GameController extends Component {
     }
 
     protected onAudio(): void {
-        this.varVolume = 1;
-        this.varVolumeArray.push(this.varVolume)
-        localStorage.setItem('volume', JSON.stringify(this.varVolumeArray))
+        this.variableVolume = 1;
+        this.variableVolumeArray.push(this.variableVolume)
+        sys.localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
 
-        this.GameModel.AudioOnBtn.node.active = true;
-        this.GameModel.AudioOffBtn.node.active = false;
-        this.GameModel.AudioBackGround.volume = 1;
+        this.iconShow.node.active = true;
+        this.iconOff.node.active = false;
+        this.audioController.playAudio();
     }
 
     protected offAudio(): void {
-        this.varVolume = 0;
-        this.varVolumeArray.push(this.varVolume)
-        localStorage.setItem('volume', JSON.stringify(this.varVolumeArray))
-        
-        this.GameModel.AudioOnBtn.node.active = false;
-        this.GameModel.AudioOffBtn.node.active = true;
-        this.GameModel.AudioBackGround.volume = 0;
-    }
+        this.variableVolume = 0;
+        this.variableVolumeArray.push(this.variableVolume)
+        sys.localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
 
-    protected onClickAudioNode(): void{
-        this.isMuted = !this.isMuted;
-        if (this.isMuted) {
-            this.GameModel.AudioBackGround.volume = 0;
-        } else {
-            this.GameModel.AudioBackGround.volume = 1;
-        } 
-    }
-
-    protected onToggleButtonClicked(): void  {
-        this.isIconShown = !this.isIconShown;
-        this.updateIconsVisibility();
-    }
-
-    protected updateIconsVisibility(): void {
-        this.GameModel.AudioOnBtn.node.active = this.isIconShown;
-        this.GameModel.AudioOffBtn.node.active = !this.isIconShown;
+        this.iconShow.node.active = false;
+        this.iconOff.node.active = true;
+        this.audioController.pauseAudio();
     }
 
     protected moveListSea(): void{

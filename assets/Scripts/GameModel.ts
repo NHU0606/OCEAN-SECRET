@@ -12,12 +12,6 @@ export class GameModel extends Component {
     @property({type: AudioSource})
     private audioBackGround: AudioSource = null;
 
-    @property({type: Button})
-    private audioOff: Button = null;
-
-    @property({type: Button})
-    private audioOn: Button = null;
-
     public get FishPrefabs(): Prefab[] {
         return this.fishPrefabs;
     }
@@ -36,22 +30,6 @@ export class GameModel extends Component {
     
     public set AudioBackGround(audioBackGround : AudioSource) {
         this.audioBackGround = audioBackGround;
-    }
-
-    public get AudioOffBtn() : Button {
-        return this.audioOff;
-    }
-    
-    public set AudioOffBtn(audioOff : Button) {
-        this.audioOff = audioOff;
-    }
-
-    public get AudioOnBtn() : Button {
-        return this.audioOn;
-    }
-    
-    public set AudioOnBtn(audioOn : Button) {
-        this.audioOn = audioOn;
     }
 }
 

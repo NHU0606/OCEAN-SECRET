@@ -25,12 +25,12 @@ export class PauseController extends Component {
         this.pauseIcon.active = true;
     }
 
-    onToggleButtonClicked() {
+    protected onToggleButtonClicked(): void  {
         this.isIconPause = !this.isIconPause;
         this.updateIcon();
     }
 
-    updateIcon(){
+    protected updateIcon(): void {
         this.playIcon.active = this.isIconPause;
         this.pauseIcon.active = !this.isIconPause;
     }

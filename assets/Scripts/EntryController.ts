@@ -6,15 +6,15 @@ const { ccclass, property } = _decorator;
 export class EntryController extends Component {
     private isIconShown: boolean = false;
     private isMuted: boolean = false;
-    private varVolume: number;
-    private varVolumeArray: number[] = [];
+    private variableVolume: number;
+    private variableVolumeArray: number[] = [];
     private convertVolume: number;
-
-    @property(HelpComtroller)
-    private help: HelpComtroller;
 
     @property({type: Button})
     private playBtn: Button = null;
+
+    @property({type: Button})
+    private helpBtn: Button = null;
 
     @property({type: AudioSource})
     private audioBackGround: AudioSource = null;
@@ -25,51 +25,34 @@ export class EntryController extends Component {
     @property({type: Button})
     private audioOn: Button = null;
 
-    @property({type: Button})
-    private helpBtn: Button = null;
-
     protected onClickPlayBtn(): void{
         director.loadScene('Play');
     }
 
     protected onClickHelpBtn(): void {
-        let opacityBtnOff = this.audioOff.getComponent(UIOpacity)
-        let opacityBtnOn = this.audioOn.getComponent(UIOpacity)
-        this.help.showHelp();
-        this.helpBtn.node.active = false;
-        this.playBtn.node.active = false;
-        opacityBtnOff.opacity = 0;
-        opacityBtnOn.opacity = 0;
-    }
-
-    protected onClickCloseBtn(): void {
-        let opacityBtnOff = this.audioOff.getComponent(UIOpacity)
-        let opacityBtnOn = this.audioOn.getComponent(UIOpacity)
-        this.help.node.active = false;
-        this.helpBtn.node.active = true;
-        this.playBtn.node.active = true;
-        opacityBtnOff.opacity = 255;
-        opacityBtnOn.opacity = 255;
+        director.loadScene('Help')
     }
 
     protected start(): void {
-        var getVolume = sys.localStorage.getItem('volume');
+        var getVolumne = sys.localStorage.getItem('volume')
 
-        if(getVolume){
-            this.varVolumeArray = JSON.parse(getVolume)
-            localStorage.setItem('volume', JSON.stringify(this.varVolumeArray))
-        } else {
+        if(getVolumne){
+            this.variableVolumeArray = JSON.parse(getVolumne)
+            localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
+        }
+        else {
             this.audioBackGround.volume = 1;
             this.audioOn.node.active = true;
             this.audioOff.node.active = false;
         }
-
-        this.convertVolume = this.varVolumeArray[this.varVolumeArray.length - 1]
-        if(this.convertVolume === 1) {
+        
+        this.convertVolume = this.variableVolumeArray[this.variableVolumeArray.length - 1]
+        if(this.convertVolume === 1){
             this.audioOn.node.active = true;
             this.audioOff.node.active = false;
             this.audioBackGround.volume = 1;
-        } else if(this.convertVolume === 0) {
+        }
+        else if(this.convertVolume === 0) {
             this.audioOn.node.active = false;
             this.audioOff.node.active = true;
             this.audioBackGround.volume = 0;
@@ -83,9 +66,9 @@ export class EntryController extends Component {
     }
 
     protected onAudio(): void {
-        this.varVolume = 1;
-        this.varVolumeArray.push(this.varVolume)
-        localStorage.setItem('volume', JSON.stringify(this.varVolumeArray))
+        this.variableVolume = 1;
+        this.variableVolumeArray.push(this.variableVolume)
+        sys.localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
 
         this.audioOn.node.active = true;
         this.audioOff.node.active = false;
@@ -93,10 +76,9 @@ export class EntryController extends Component {
     }
 
     protected offAudio(): void {
-        this.varVolume = 0;
-        this.varVolumeArray.push(this.varVolume)
-        localStorage.setItem('volume', JSON.stringify(this.varVolumeArray))
-        
+        this.variableVolume = 0;
+        this.variableVolumeArray.push(this.variableVolume)
+        sys.localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
         this.audioOn.node.active = false;
         this.audioOff.node.active = true;
         this.audioBackGround.volume = 0;
