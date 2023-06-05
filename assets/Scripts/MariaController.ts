@@ -12,14 +12,9 @@ enum MariaDirection {
 
 @ccclass('MariaController')
 export class MariaController extends Component {
-    @property({type: Node})
-    public mariaNode: Node = null;
-
-    @property({type: PolygonCollider2D})
-    public collider: PolygonCollider2D = null;
-
+    private mariaEat: boolean = false;
     @property
-    private speed: number = 60;
+    private speed: number = 1000;
 
     private direction: Vec3 = new Vec3(0, 0, 0);
 
@@ -36,28 +31,28 @@ export class MariaController extends Component {
     protected onKeyDown(event: EventKeyboard): void {
         switch (event.keyCode){
             case KeyCode.ARROW_LEFT:
-                this.direction.x = -1;
+                this.direction.x = -2;
                 this.direction.y = 0;
                 this.node.angle = 180;
-                this.node.scale = new Vec3 (1, -1, 0);
+                // this.node.scale = new Vec3 (1, -1, 0);
                 break;
             case KeyCode.ARROW_RIGHT:
-                this.direction.x = 1;
+                this.direction.x = 2;
                 this.direction.y = 0;
                 this.node.angle = 0;
-                this.node.scale = new Vec3 (1, 1, 0);
+                // this.node.scale = new Vec3 (1, 1, 0);
                 break;
             case KeyCode.ARROW_UP:
                 this.direction.x = 0;
-                this.direction.y = 1;
+                this.direction.y = 2;
                 this.node.angle = 90;
-                this.node.scale = new Vec3 (1, 1, 0);
+                // this.node.scale = new Vec3 (1, 1, 0);
                 break;
             case KeyCode.ARROW_DOWN:
                 this.direction.x = 0;
-                this.direction.y = -1;
+                this.direction.y = -2;
                 this.node.angle = 270;
-                this.node.scale = new Vec3 (1, -1, 0);
+                // this.node.scale = new Vec3 (1, -1, 0);
                 break;
         }
     }
@@ -86,11 +81,6 @@ export class MariaController extends Component {
     protected update(dt: number): void {
         const displacement = this.direction.multiplyScalar(this.speed * dt);
         this.node.position = this.node.position.add(displacement);  
-        
-        if (this.collider) {
-            this.collider.offset = new Vec2(this.node.position.x, this.node.position.y);
-            console.log('aaa');
-        }
     }
 }
 

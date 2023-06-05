@@ -1,6 +1,6 @@
-import { _decorator, AudioSource, Button, Component, instantiate, Node, Sprite, sys, math, randomRangeInt, director, UIOpacity, Collider2D, Contact2DType, IPhysics2DContact, PolygonCollider2D } from 'cc';
-import { MariaController } from './MariaController';
+import { _decorator, AudioSource, Button, Component, instantiate, Node, Sprite, sys, math, randomRangeInt, director, UIOpacity, Collider2D, Contact2DType, IPhysics2DContact, PolygonCollider2D, Vec3, input, Input, EventKeyboard } from 'cc';
 import { GameModel } from './GameModel';
+import { MariaController } from './MariaController';
 import { PauseController } from './PauseController';
 import { FishPrefabController } from './FishPrefabController';
 import { AudioController } from './AudioController';
@@ -8,15 +8,18 @@ const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
 export class GameController extends Component {
-    private isIconShown: boolean = false;
-    private isMuted: boolean = false;
     private variableVolume: number;
     private variableVolumeArray: number[] = [];
     private convertVolume: number;
     private fishArray: FishPrefabController[] = [];
 
+    @property({type: MariaController})
+    private mariaController: MariaController;
+
     @property({type: AudioController})
     private audioController: AudioController;
+
+    private mariaNode : MariaController;
 
     @property({type: Button})
     private iconShow: Button = null;    
@@ -48,7 +51,6 @@ export class GameController extends Component {
         if(getVolumne){
             this.variableVolumeArray = JSON.parse(getVolumne)
             localStorage.setItem('volume', JSON.stringify(this.variableVolumeArray))
-        
         }
         else {
             this.audioController.playAudio();
@@ -67,9 +69,27 @@ export class GameController extends Component {
             this.iconOff.node.active = true;
             this.audioController.pauseAudio();
         }
+
+        this.mariaNode = this.mariaController.getComponent(MariaController);
+
+        const mariaCollider = this.mariaNode.getComponent(Collider2D);
+        if (mariaCollider) {
+            mariaCollider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
+            mariaCollider.node.position = new Vec3(0, 0, 0);
+            mariaCollider.apply();
+            console.log("had maria collider")
+        }
+    }
+    
+    protected onBeginContact(
+        selfCollider: Collider2D,
+        otherCollider: Collider2D,
+        contact: IPhysics2DContact | null
+    ) : void {
+        console.log('aaaaaaaa')
     }
 
-    onClickIconPause(){
+    protected onClickIconPause(): void {
         let opacityBtnOff = this.iconOff.getComponent(UIOpacity)
         let opacityBtnOn = this.iconShow.getComponent(UIOpacity)
         
@@ -93,6 +113,7 @@ export class GameController extends Component {
         const randomFishIndex = randomRangeInt(0,this.GameModel.FishPrefabs.length);
         const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
         const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
+        
         fishNode.Init(this.GameModel.BirdContain);
         this.fishArray.push(fishNode);
     }
