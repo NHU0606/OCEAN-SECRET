@@ -34,6 +34,10 @@ export class EntryController extends Component {
     }
 
     protected start(): void {
+        if(!localStorage.getItem('highscore')) {
+            localStorage.setItem('highscore', '0')
+        } 
+        
         var getVolumne = sys.localStorage.getItem('volume')
 
         if(getVolumne){

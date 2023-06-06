@@ -1,4 +1,4 @@
-import { _decorator, Component, Contact2DType, EventKeyboard, input, Input, IPhysics2DContact, KeyCode, macro, Node, PolygonCollider2D, v2, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, EventKeyboard, input, Input, KeyCode, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum MariaDirection {
@@ -12,10 +12,8 @@ enum MariaDirection {
 
 @ccclass('MariaController')
 export class MariaController extends Component {
-    private mariaEat: boolean = false;
     @property
     private speed: number = 1000;
-
     private direction: Vec3 = new Vec3(0, 0, 0);
 
     protected onLoad(): void {
@@ -34,25 +32,21 @@ export class MariaController extends Component {
                 this.direction.x = -2;
                 this.direction.y = 0;
                 this.node.angle = 180;
-                // this.node.scale = new Vec3 (1, -1, 0);
                 break;
             case KeyCode.ARROW_RIGHT:
                 this.direction.x = 2;
                 this.direction.y = 0;
                 this.node.angle = 0;
-                // this.node.scale = new Vec3 (1, 1, 0);
                 break;
             case KeyCode.ARROW_UP:
                 this.direction.x = 0;
                 this.direction.y = 2;
                 this.node.angle = 90;
-                // this.node.scale = new Vec3 (1, 1, 0);
                 break;
             case KeyCode.ARROW_DOWN:
                 this.direction.x = 0;
                 this.direction.y = -2;
                 this.node.angle = 270;
-                // this.node.scale = new Vec3 (1, -1, 0);
                 break;
         }
     }
@@ -74,10 +68,6 @@ export class MariaController extends Component {
         }
     }
 
-    protected onCollisionEnter(otherCollider: PolygonCollider2D): void {
-        console.log('aaa');
-    }
-    
     protected update(dt: number): void {
         const displacement = this.direction.multiplyScalar(this.speed * dt);
         this.node.position = this.node.position.add(displacement);  

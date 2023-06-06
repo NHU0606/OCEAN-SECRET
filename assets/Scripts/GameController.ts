@@ -4,6 +4,8 @@ import { MariaController } from './MariaController';
 import { PauseController } from './PauseController';
 import { FishPrefabController } from './FishPrefabController';
 import { AudioController } from './AudioController';
+import { ScoreController } from './ScoreController';
+import { HpController } from './HpController';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -12,6 +14,16 @@ export class GameController extends Component {
     private variableVolumeArray: number[] = [];
     private convertVolume: number;
     private fishArray: FishPrefabController[] = [];
+    private eatFish: boolean = false;
+
+    @property({type: ScoreController})
+    private score: ScoreController;
+
+    @property({type: HpController})
+    private hpNode: HpController;
+
+    // @property({type: FishPrefabController})
+    // private fishController: FishPrefabController;
 
     @property({type: MariaController})
     private mariaController: MariaController;
@@ -37,14 +49,28 @@ export class GameController extends Component {
     private listSea: Sprite[] = [null, null];
 
     protected onLoad() : void  {
+        director.resume();
         const audioSrc = this.node.getComponent(AudioSource)
         this.GameModel.AudioBackGround = audioSrc;
     }
 
+    protected spawnFish(): void {
+        const randomFishIndex = randomRangeInt(0,this.GameModel.FishPrefabs.length);
+        const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
+        const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
+        
+        fishNode.Init(this.GameModel.FishContain);
+        this.fishArray.push(fishNode);
+    }
+
+
     protected start(): void {
+        this.eatFish = false; 
+        
+
         this.schedule(function(){
             this.spawnFish();
-        }, math.randomRangeInt(2, 3))  
+        }, math.randomRangeInt(3, 7))  
 
         var getVolumne = sys.localStorage.getItem('volume')
 
@@ -77,7 +103,6 @@ export class GameController extends Component {
             mariaCollider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             mariaCollider.node.position = new Vec3(0, 0, 0);
             mariaCollider.apply();
-            console.log("had maria collider")
         }
     }
     
@@ -86,7 +111,24 @@ export class GameController extends Component {
         otherCollider: Collider2D,
         contact: IPhysics2DContact | null
     ) : void {
-        console.log('aaaaaaaa')
+        for(let i = 0; i < this.fishArray.length; ++i) {
+            if (selfCollider.node.name === 'Maria') {
+                const mariaNode = selfCollider.node;
+                const otherNode = otherCollider.node;
+                const mariaSize = mariaNode.scale.x;
+                const otherFishSize = otherNode.scale.x;
+    
+                    if (mariaSize < otherFishSize) {
+                        this.hpNode.minusHp();
+                    } else if (mariaSize >= otherFishSize){
+                        this.score.addScore();
+                        
+                        //make size of maria bigger
+                        const scaleFactor = 0.001; 
+                        mariaNode.setScale(mariaNode.scale.x + scaleFactor, mariaNode.scale.y + scaleFactor);
+                    }
+            }
+        }
     }
 
     protected onClickIconPause(): void {
@@ -109,13 +151,9 @@ export class GameController extends Component {
         }
     }
 
-    protected spawnFish(): void {
-        const randomFishIndex = randomRangeInt(0,this.GameModel.FishPrefabs.length);
-        const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
-        const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
+   
+    protected detroyFish(): void {
         
-        fishNode.Init(this.GameModel.BirdContain);
-        this.fishArray.push(fishNode);
     }
 
     protected onAudio(): void {
@@ -149,8 +187,18 @@ export class GameController extends Component {
         }
     }
 
+    protected onClickAgainBtn(): void {
+        director.loadScene('Play');
+    }
+
+    protected onClickMenuBtn(): void {
+        director.loadScene('Entry');
+    }
+
     protected update(dt: number): void {
         this.moveListSea();
+
+        this.hpNode.checkDie();
     }
 }
 

@@ -1,4 +1,4 @@
-import { _decorator, Collider2D, Component, math, Node, Vec3 } from 'cc';
+import { _decorator, Collider2D, Component, math, Node, PolygonCollider2D, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 enum FishDirection {
@@ -8,11 +8,10 @@ enum FishDirection {
 
 @ccclass('FishPrefabController')
 export class FishPrefabController extends Component {
-   
     private fishSpeed: number = math.randomRangeInt(50, 150);
     private curDirection: FishDirection = FishDirection.Left;
     private directionChangeDelay: number = 8;
-    private randomSize: number = math.randomRange(0.3, 1.0);
+    private randomSize: number = math.randomRange(0.2, 0.8);
     private directionChangeTime: number = 0;
 
     public Init(parent: Node): void {
@@ -25,11 +24,10 @@ export class FishPrefabController extends Component {
     protected start(): void {      
         const fishCollider = this.node.getComponent(Collider2D);
         if (fishCollider) {
+            fishCollider.node.position = new Vec3(math.randomRangeInt(-500, 0),math.randomRangeInt(-270, 100),0);
             fishCollider.apply();
-            console.log("had fish collider")
         }
     }
-    
 
     protected moveFish(dt: number): void {
         const movement = new Vec3(0,0,0);
@@ -40,9 +38,10 @@ export class FishPrefabController extends Component {
         } else if (this.curDirection == FishDirection.Right){
             movement.x += this.fishSpeed * dt;
             this.node.angle = 180;
-            this.node.scale = new Vec3(this.randomSize, this.randomSize*-1, 1);
+            this.node.scale = new Vec3(this.randomSize*-1, this.randomSize*-1, 1);
         }
         this.node.position = this.node.position.add(movement);
+        this.node.getComponent(Collider2D);
     }
 
     protected updateDirection(dt: number): void {
