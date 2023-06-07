@@ -11,11 +11,11 @@ export class FishPrefabController extends Component {
     private fishSpeed: number = math.randomRangeInt(50, 150);
     private curDirection: FishDirection = FishDirection.Left;
     private directionChangeDelay: number = 8;
-    private randomSize: number = math.randomRange(0.2, 0.8);
+    private randomSize: number = math.randomRange(-0.2, -0.9);
     private directionChangeTime: number = 0;
 
     public Init(parent: Node): void {
-        this.node.scale = new Vec3(this.randomSize, this.randomSize, 1);
+        this.node.scale = new Vec3(this.randomSize, this.randomSize*-1, 1);
         
         parent.addChild(this.node);
         this.node.setPosition(math.randomRangeInt(-500, 0), math.randomRangeInt(-270, 100), 0);
@@ -40,7 +40,7 @@ export class FishPrefabController extends Component {
             this.node.angle = 180;
             this.node.scale = new Vec3(this.randomSize*-1, this.randomSize*-1, 1);
         }
-        this.node.position = this.node.position.add(movement);
+        this.node.position = this.node.position.add(movement);  
         this.node.getComponent(Collider2D);
     }
 
@@ -56,6 +56,10 @@ export class FishPrefabController extends Component {
         const directionCount = Object.keys(FishDirection).length / 2;
         const nextDirection = (this.curDirection + 1) % directionCount;
         this.curDirection = nextDirection;
+    }
+
+    checkDestroy() {
+        this.node.active = false;
     }
 
     protected update(dt: number): void {

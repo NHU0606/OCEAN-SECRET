@@ -31,7 +31,6 @@ export class ResultController extends Component {
     @property({type: Sprite})
     private overLay: Sprite;
 
-
     onClickBtnAgain(){
         director.loadScene('Play')
     }

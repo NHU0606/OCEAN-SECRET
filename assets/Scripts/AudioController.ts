@@ -18,7 +18,6 @@ export class AudioController extends Component {
     @property(AudioSource)
     public audioBackground: AudioSource = null;
 
-
     @property({type: Sprite})
     private iconToShow: Sprite = null;    
 
@@ -40,6 +39,11 @@ export class AudioController extends Component {
     public set IconToHide(iconToHide : Sprite) {
         this.iconToHide = iconToHide;
     } 
+
+    start() {
+        this.iconToShow.node.active = true;
+        this.iconToHide.node.active = false;
+    }
 
     protected onLoad(): void {
         this.iconToShow.node.active = false;

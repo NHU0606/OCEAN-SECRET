@@ -15,18 +15,15 @@ export class GameModel extends Component {
     @property({type: Label})
     private scoreText: Label = null;
 
-    @property({type: Label})
-    private hpText: Label = null;
-
     public get FishPrefabs(): Prefab[] {
         return this.fishPrefabs;
     }
 
-    public get FishContain() : Node {
+    public get Fish2Contain() : Node {
         return this.fish2Node;
     }
     
-    public set Fish2Node(fish2Node : Node) {
+    public set Fish2Contain(fish2Node : Node) {
         this.fish2Node = fish2Node;
     }
     
@@ -45,15 +42,6 @@ export class GameModel extends Component {
     public get ScoreText() : Label {
         return this.scoreText;
     }
-
-    public set HpText(hpText : Label) {
-        this.hpText = hpText;
-    }
-
-    public get HpText() : Label {
-        return this.hpText;
-    }
-    
 }
 
 
