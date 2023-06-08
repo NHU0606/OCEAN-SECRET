@@ -1237,10 +1237,10 @@
     "_enabled": true,
     "__prefab": null,
     "_clip": {
-      "__uuid__": "ef26534a-56fc-4099-95fd-d9f277e16acc",
+      "__uuid__": "26071304-2584-4027-8b99-362581838cb1",
       "__expectedType__": "cc.AudioClip"
     },
-    "_loop": false,
+    "_loop": true,
     "_playOnAwake": true,
     "_volume": 1,
     "_id": "8af557EkRPb6V9XC0UrWqJ"

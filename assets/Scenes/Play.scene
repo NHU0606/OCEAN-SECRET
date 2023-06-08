@@ -86,7 +86,7 @@
         "__id__": 118
       },
       {
-        "__id__": 89
+        "__id__": 91
       },
       {
         "__id__": 31
@@ -915,7 +915,7 @@
         "__id__": 73
       },
       {
-        "__id__": 91
+        "__id__": 93
       },
       {
         "__id__": 110
@@ -975,7 +975,7 @@
         "__id__": 81
       },
       {
-        "__id__": 94
+        "__id__": 89
       }
     ],
     "_active": true,
@@ -1286,7 +1286,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "totalTime": 30,
+    "totalTime": 120,
     "result": {
       "__id__": 34
     },
@@ -1306,7 +1306,7 @@
       "__id__": 29
     },
     "GameModel": {
-      "__id__": 88
+      "__id__": 90
     },
     "pause": {
       "__id__": 95
@@ -2854,6 +2854,33 @@
     "_id": "dcCBNYVdtMCZnbqMSSxjAN"
   },
   {
+    "__type__": "cc.BoxCollider2D",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 73
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "tag": 0,
+    "_group": 1,
+    "_density": 1,
+    "_sensor": false,
+    "_friction": 0.2,
+    "_restitution": 0,
+    "_offset": {
+      "__type__": "cc.Vec2",
+      "x": 0,
+      "y": -3.5
+    },
+    "_size": {
+      "__type__": "cc.Size",
+      "width": 150,
+      "height": 35
+    },
+    "_id": "83bcQ0mOxOQY9VZ6IgUPlC"
+  },
+  {
     "__type__": "cc.RigidBody2D",
     "_name": "",
     "_objFlags": 0,
@@ -2881,33 +2908,6 @@
     "_id": "01+32mHzpHGaOXVPCiiaBg"
   },
   {
-    "__type__": "cc.BoxCollider2D",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 73
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "tag": 0,
-    "_group": 1,
-    "_density": 1,
-    "_sensor": true,
-    "_friction": 0.2,
-    "_restitution": 0,
-    "_offset": {
-      "__type__": "cc.Vec2",
-      "x": 0,
-      "y": 1.1
-    },
-    "_size": {
-      "__type__": "cc.Size",
-      "width": 148.6,
-      "height": 69.6
-    },
-    "_id": "70xlee/oVFOqPH4lj05EnB"
-  },
-  {
     "__type__": "ca3b3pXxutAyrTD90k1luo4",
     "_name": "",
     "_objFlags": 0,
@@ -2921,6 +2921,9 @@
     },
     "iconToShow": {
       "__id__": 82
+    },
+    "audioEat": {
+      "__id__": 88
     },
     "iconToHide": {
       "__id__": 28
@@ -3191,11 +3194,73 @@
     "_id": "b89vGS5YJNoqeR1Ob9+cOe"
   },
   {
-    "__type__": "f2cb9LcyCNM8a6+gpXpT+s5",
+    "__type__": "cc.AudioSource",
     "_name": "",
     "_objFlags": 0,
     "node": {
       "__id__": 89
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_clip": {
+      "__uuid__": "8ab46b39-20b0-40eb-b48d-0b2ce92bf274",
+      "__expectedType__": "cc.AudioClip"
+    },
+    "_loop": false,
+    "_playOnAwake": true,
+    "_volume": 1,
+    "_id": "aaI11Xv2RASpET3GFnh0IH"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "AudioEat",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 25
+    },
+    "_children": [],
+    "_active": true,
+    "_components": [
+      {
+        "__id__": 88
+      }
+    ],
+    "_prefab": null,
+    "_lpos": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_lrot": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_lscale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_mobility": 0,
+    "_layer": 33554432,
+    "_euler": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_id": "f1CBSaOCdDYoJTYNQRQj1X"
+  },
+  {
+    "__type__": "f2cb9LcyCNM8a6+gpXpT+s5",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 91
     },
     "_enabled": true,
     "__prefab": null,
@@ -3218,13 +3283,13 @@
       }
     ],
     "fish2Node": {
-      "__id__": 91
+      "__id__": 93
     },
     "audioBackGround": {
       "__id__": 80
     },
     "audioEat": {
-      "__id__": 93
+      "__id__": 88
     },
     "scoreText": {
       "__id__": 71
@@ -3242,10 +3307,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 90
+        "__id__": 92
       },
       {
-        "__id__": 88
+        "__id__": 90
       }
     ],
     "_prefab": null,
@@ -3283,7 +3348,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 89
+      "__id__": 91
     },
     "_enabled": true,
     "__prefab": null,
@@ -3310,7 +3375,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 92
+        "__id__": 94
       }
     ],
     "_prefab": null,
@@ -3348,7 +3413,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 91
+      "__id__": 93
     },
     "_enabled": true,
     "__prefab": null,
@@ -3363,68 +3428,6 @@
       "y": 0.5
     },
     "_id": "74dbmSJ1VJpa8VsycjGjQV"
-  },
-  {
-    "__type__": "cc.AudioSource",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 94
-    },
-    "_enabled": true,
-    "__prefab": null,
-    "_clip": {
-      "__uuid__": "8ab46b39-20b0-40eb-b48d-0b2ce92bf274",
-      "__expectedType__": "cc.AudioClip"
-    },
-    "_loop": false,
-    "_playOnAwake": true,
-    "_volume": 1,
-    "_id": "aaI11Xv2RASpET3GFnh0IH"
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "AudioEat",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 25
-    },
-    "_children": [],
-    "_active": true,
-    "_components": [
-      {
-        "__id__": 93
-      }
-    ],
-    "_prefab": null,
-    "_lpos": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_lrot": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_lscale": {
-      "__type__": "cc.Vec3",
-      "x": 1,
-      "y": 1,
-      "z": 1
-    },
-    "_mobility": 0,
-    "_layer": 33554432,
-    "_euler": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_id": "f1CBSaOCdDYoJTYNQRQj1X"
   },
   {
     "__type__": "a354cWkxN1Cb5/Su6JpCI+g",

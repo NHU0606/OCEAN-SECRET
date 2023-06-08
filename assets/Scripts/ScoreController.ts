@@ -15,36 +15,8 @@ export class ScoreController extends Component {
         }
     }
 
-    addScore1() {
-        this.updateScore(this.curScore + 1);
-    }
-
-    addScore2() {
-        this.updateScore(this.curScore + 2);
-    }
-
-    addScore3() {
-        this.updateScore(this.curScore + 3);
-    }
-
-    addScore4() {
-        this.updateScore(this.curScore + 4);
-    }
-
-    addScore5() {
-        this.updateScore(this.curScore + 5);
-    }
-
-    addScore6() {
-        this.updateScore(this.curScore + 6);
-    }
-
-    addScore7() {
-        this.updateScore(this.curScore + 7);
-    }
-
-    addScore8() {
-        this.updateScore(this.curScore + 8);
+    addScore(increment: number) {
+        this.updateScore(this.curScore + increment);
     }
 
     hideScore() {

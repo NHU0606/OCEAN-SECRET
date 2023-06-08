@@ -1,4 +1,4 @@
-import { _decorator, AudioSource, Button, Component, instantiate, Node, Sprite, sys, math, randomRangeInt, director, UIOpacity, Collider2D, Contact2DType, IPhysics2DContact, PolygonCollider2D, Vec3, input, Input, EventKeyboard, Label, CCInteger } from 'cc';
+import { _decorator, AudioSource, Button, Component, instantiate, Node, Sprite, sys, math, randomRangeInt, director, UIOpacity, Collider2D, Contact2DType, IPhysics2DContact, PolygonCollider2D, Vec3, input, Input, EventKeyboard, Label, CCInteger, PhysicsSystem2D, EPhysics2DDrawFlags } from 'cc';
 import { GameModel } from './GameModel';
 import { MariaController } from './MariaController';
 import { PauseController } from './PauseController';
@@ -13,7 +13,6 @@ export class GameController extends Component {
     private variableVolume: number;
     private variableVolumeArray: number[] = [];
     private convertVolume: number;
-    private fishArray: FishPrefabController[] = [];
 
     @property({type:CCInteger})
     private totalTime: number = 30;
@@ -64,9 +63,7 @@ export class GameController extends Component {
         const randomFishIndex = randomRangeInt(0,this.GameModel.FishPrefabs.length);
         const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
         const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
-        
         fishNode.Init(this.GameModel.Fish2Contain);
-        this.fishArray.push(fishNode);
     }
 
     protected start(): void {
@@ -83,7 +80,8 @@ export class GameController extends Component {
 
         this.schedule(function(){
             this.spawnFish();
-        }, math.randomRangeInt(3, 7))  
+        //}, math.randomRangeInt(3, 7))  
+    }, math.randomRangeInt(1, 2))
 
         var getVolumne = sys.localStorage.getItem('volume')
 
@@ -115,7 +113,6 @@ export class GameController extends Component {
         if (mariaCollider) {
             mariaCollider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
             mariaCollider.node.position = new Vec3(0, 0, 0);
-            mariaCollider.apply();
         }
     }
 
@@ -150,55 +147,55 @@ export class GameController extends Component {
         otherCollider: Collider2D,
         contact: IPhysics2DContact | null
     ) : void {
-        let destroyFishIndex : number = -1;
-        for(let i = 0; i < this.fishArray.length; ++i) {
-            if (selfCollider.node.name === 'Maria') {
-                const mariaNode = selfCollider.node;
-                const otherNode = otherCollider.node;
-                const mariaSize = Math.abs(mariaNode.scale.x);
-                const otherFishSize = Math.abs(otherNode.scale.x);
-                console.log("fish ",otherFishSize)
-                console.log("maria ", mariaSize)
-                    if (mariaSize < otherFishSize) {
-                        this.result.node.active = true;
-                        this.iconShow.node.active = false;
-                        this.iconOff.node.active = false;
-                        this.pause.node.active = false;
-                        this.score.node.active = false;
-                        this.timeLabel.node.active = false;
-                        this.result.showResult();
-                        this.GameModel.Fish2Contain.active = false;
-                    } else if (mariaSize > otherFishSize){
-                        this.GameModel.AudioEat.play();
-                        //make size of maria bigger
-                        const scaleFactor = 0.001; 
-                        mariaNode.setScale(Math.abs(mariaNode.scale.x + scaleFactor), Math.abs(mariaNode.scale.y + scaleFactor));
-                        
-                        if(otherFishSize >= 0.1 && otherFishSize < 0.2){
-                            this.score.addScore1();
-                        } else if(otherFishSize >= 0.2 && otherFishSize < 0.3){
-                            this.score.addScore2();
-                        } else if(otherFishSize >= 0.3 && otherFishSize < 0.4){
-                            this.score.addScore3();
-                        } else if(otherFishSize >= 0.4 && otherFishSize < 0.5){
-                            this.score.addScore4();
-                        } else if(otherFishSize >= 0.5 && otherFishSize < 0.6){
-                            this.score.addScore5();
-                        } else if(otherFishSize >= 0.6 && otherFishSize < 0.7){
-                            this.score.addScore6();
-                        } else if(otherFishSize >= 0.7 && otherFishSize < 0.8){
-                            this.score.addScore7();
-                        } else if(otherFishSize >= 0.8 && otherFishSize < 0.9){
-                            this.score.addScore8();
-                        }
-                        destroyFishIndex = i;
-                        break;
-                    }
+        const mariaNode = selfCollider.node;
+        const otherNode = otherCollider.node;
+        let mariaSize = mariaNode.scale.x
+        const otherFishSize = Math.abs(otherNode.scale.x);
+        if (Math.abs(mariaSize) < otherFishSize) {
+            this.result.node.active = true;
+            this.iconShow.node.active = false;
+            this.iconOff.node.active = false;
+            this.pause.node.active = false;
+            this.score.node.active = false;
+            this.timeLabel.node.active = false;
+            this.mariaController.node.active = false;
+            this.result.showResult();
+            this.GameModel.Fish2Contain.active = false;
+        } else if (Math.abs(mariaSize) > otherFishSize){
+            this.GameModel.AudioEat.play();
+            otherNode.destroy();
+            //make size of maria bigger
+            let scaleFactor = 0.001;
+            if (mariaSize > 0) {
+                mariaSize += scaleFactor;
+                mariaNode.setScale(mariaSize, Math.abs(mariaNode.scale.y + scaleFactor), 0);
+                selfCollider.apply();
             }
-        }
-        if(destroyFishIndex >= 0) {
-            this.fishArray[destroyFishIndex].node.destroy();
-            this.fishArray.splice(destroyFishIndex, 1);
+            else if (mariaSize < 0) {
+                mariaSize -= scaleFactor;
+                mariaNode.setScale(mariaSize, Math.abs(mariaNode.scale.y + scaleFactor), 0);
+                selfCollider.apply();
+            }
+           
+            let scoreIncrement = 0;
+            if (otherFishSize >= 0.1 && otherFishSize < 0.2) {
+                scoreIncrement = 1;
+            } else if (otherFishSize >= 0.2 && otherFishSize < 0.3) {
+                scoreIncrement = 2;
+            } else if (otherFishSize >= 0.3 && otherFishSize < 0.4) {
+                scoreIncrement = 3;
+            } else if (otherFishSize >= 0.4 && otherFishSize < 0.5) {
+                scoreIncrement = 4;
+            } else if (otherFishSize >= 0.5 && otherFishSize < 0.6) {
+                scoreIncrement = 5;
+            } else if (otherFishSize >= 0.6 && otherFishSize < 0.7) {
+                scoreIncrement = 6;
+            } else if (otherFishSize >= 0.7 && otherFishSize < 0.8) {
+                scoreIncrement = 7;
+            } else if (otherFishSize >= 0.8 && otherFishSize < 0.9) {
+                scoreIncrement = 8;
+            }
+            this.score.addScore(scoreIncrement);
         }
     }
 
@@ -220,11 +217,6 @@ export class GameController extends Component {
             opacityBtnOff.opacity = 255;
             opacityBtnOn.opacity = 255;
         }
-    }
-
-   
-    protected detroyFish(): void {
-        
     }
 
     protected onAudio(): void {
