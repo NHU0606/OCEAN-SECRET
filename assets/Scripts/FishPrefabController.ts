@@ -11,14 +11,14 @@ export class FishPrefabController extends Component {
     private fishSpeed: number = math.randomRangeInt(50, 150);
     private curDirection: FishDirection = FishDirection.Left;
     private directionChangeDelay: number = 8;
-    private randomSize: number = math.randomRange(-0.2, -0.9);
+    private randomSize: number = math.randomRange(Math.abs(0.1), Math.abs(0.9));
     private directionChangeTime: number = 0;
 
     public Init(parent: Node): void {
         this.node.scale = new Vec3(this.randomSize, this.randomSize*-1, 1);
         
         parent.addChild(this.node);
-        this.node.setPosition(math.randomRangeInt(-500, 0), math.randomRangeInt(-270, 100), 0);
+        this.node.setPosition(math.randomRangeInt(-500, -400) && math.randomRangeInt(400, 500), math.randomRangeInt(-270, 100), 0);
     }
     
     protected start(): void {      
@@ -33,12 +33,15 @@ export class FishPrefabController extends Component {
         const movement = new Vec3(0,0,0);
         if (this.curDirection == FishDirection.Left) {
             movement.x -= this.fishSpeed * dt;
-            this.node.angle = 0;
-            this.node.scale = new Vec3(this.randomSize, this.randomSize, 1);
+            this.node.angle = 180;
+            // this.node.scale = new Vec3(Math.abs(this.node.scale.x), Math.abs(this.node.scale.y), 0.5);
+            this.node.scale = new Vec3(Math.abs(this.node.scale.x), this.node.scale.y, 0.5);
+
         } else if (this.curDirection == FishDirection.Right){
             movement.x += this.fishSpeed * dt;
-            this.node.angle = 180;
-            this.node.scale = new Vec3(this.randomSize*-1, this.randomSize*-1, 1);
+            this.node.angle = 0;
+            this.node.scale = new Vec3(-Math.abs(this.node.scale.x), this.node.scale.y, 0.5);
+
         }
         this.node.position = this.node.position.add(movement);  
         this.node.getComponent(Collider2D);

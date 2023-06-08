@@ -1,4 +1,4 @@
-import { _decorator, AudioSource, Button, Component, instantiate, Node, Sprite, sys, math, randomRangeInt, director, UIOpacity, Collider2D, Contact2DType, IPhysics2DContact, PolygonCollider2D, Vec3, input, Input, EventKeyboard, Label } from 'cc';
+import { _decorator, AudioSource, Button, Component, instantiate, Node, Sprite, sys, math, randomRangeInt, director, UIOpacity, Collider2D, Contact2DType, IPhysics2DContact, PolygonCollider2D, Vec3, input, Input, EventKeyboard, Label, CCInteger } from 'cc';
 import { GameModel } from './GameModel';
 import { MariaController } from './MariaController';
 import { PauseController } from './PauseController';
@@ -14,7 +14,9 @@ export class GameController extends Component {
     private variableVolumeArray: number[] = [];
     private convertVolume: number;
     private fishArray: FishPrefabController[] = [];
-    private totalTime: number = 10;
+
+    @property({type:CCInteger})
+    private totalTime: number = 30;
     private time: number;
 
     @property({type: ResultController})
@@ -45,10 +47,13 @@ export class GameController extends Component {
 
     @property({type: Sprite})
     private listSea: Sprite[] = [null, null];
+
+    @property({type: Sprite})
+    private listGround: Sprite[] = [null, null];
     
     @property({type: Label})
     private timeLabel: Label;
-    
+
     protected onLoad() : void  {
         director.resume();
         const audioSrc = this.node.getComponent(AudioSource)
@@ -64,8 +69,8 @@ export class GameController extends Component {
         this.fishArray.push(fishNode);
     }
 
-
     protected start(): void {
+        this.GameModel.AudioEat.pause();
         director.resume();
 
         setTimeout(() => {
@@ -74,7 +79,7 @@ export class GameController extends Component {
             this.schedule(function(){
                 this.updateTime();
             }, 1)  
-        },1500); 
+        },0); 
 
         this.schedule(function(){
             this.spawnFish();
@@ -150,8 +155,8 @@ export class GameController extends Component {
             if (selfCollider.node.name === 'Maria') {
                 const mariaNode = selfCollider.node;
                 const otherNode = otherCollider.node;
-                const mariaSize = mariaNode.scale.x;
-                const otherFishSize = otherNode.scale.x;
+                const mariaSize = Math.abs(mariaNode.scale.x);
+                const otherFishSize = Math.abs(otherNode.scale.x);
                 console.log("fish ",otherFishSize)
                 console.log("maria ", mariaSize)
                     if (mariaSize < otherFishSize) {
@@ -164,17 +169,34 @@ export class GameController extends Component {
                         this.result.showResult();
                         this.GameModel.Fish2Contain.active = false;
                     } else if (mariaSize > otherFishSize){
+                        this.GameModel.AudioEat.play();
                         //make size of maria bigger
                         const scaleFactor = 0.001; 
-                        mariaNode.setScale(mariaNode.scale.x + scaleFactor, mariaNode.scale.y + scaleFactor);
-                    
+                        mariaNode.setScale(Math.abs(mariaNode.scale.x + scaleFactor), Math.abs(mariaNode.scale.y + scaleFactor));
+                        
+                        if(otherFishSize >= 0.1 && otherFishSize < 0.2){
+                            this.score.addScore1();
+                        } else if(otherFishSize >= 0.2 && otherFishSize < 0.3){
+                            this.score.addScore2();
+                        } else if(otherFishSize >= 0.3 && otherFishSize < 0.4){
+                            this.score.addScore3();
+                        } else if(otherFishSize >= 0.4 && otherFishSize < 0.5){
+                            this.score.addScore4();
+                        } else if(otherFishSize >= 0.5 && otherFishSize < 0.6){
+                            this.score.addScore5();
+                        } else if(otherFishSize >= 0.6 && otherFishSize < 0.7){
+                            this.score.addScore6();
+                        } else if(otherFishSize >= 0.7 && otherFishSize < 0.8){
+                            this.score.addScore7();
+                        } else if(otherFishSize >= 0.8 && otherFishSize < 0.9){
+                            this.score.addScore8();
+                        }
                         destroyFishIndex = i;
                         break;
                     }
             }
         }
         if(destroyFishIndex >= 0) {
-            this.score.addScore();
             this.fishArray[destroyFishIndex].node.destroy();
             this.fishArray.splice(destroyFishIndex, 1);
         }
@@ -236,6 +258,17 @@ export class GameController extends Component {
         }
     }
 
+    protected moveListGround(): void{
+        for(let i = 0; i < this.listGround.length; i++){
+            const sea = this.listGround[i].node.getPosition();
+            sea.x -= 2;
+            if(sea.x <= -965){
+                sea.x = 965;
+            }
+            this.listGround[i].node.setPosition(sea);
+        }
+    }
+
     protected onClickAgainBtn(): void {
         director.loadScene('Play');
     }
@@ -246,6 +279,7 @@ export class GameController extends Component {
 
     protected update(dt: number): void {
         this.moveListSea();
+        this.moveListGround();
     }
 }
 

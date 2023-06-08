@@ -12,6 +12,9 @@ export class GameModel extends Component {
     @property({type: AudioSource})
     private audioBackGround: AudioSource = null;
 
+    @property({type: AudioSource})
+    private audioEat: AudioSource = null;
+
     @property({type: Label})
     private scoreText: Label = null;
 
@@ -33,6 +36,14 @@ export class GameModel extends Component {
     
     public set AudioBackGround(audioBackGround : AudioSource) {
         this.audioBackGround = audioBackGround;
+    }
+
+    public get AudioEat() : AudioSource {
+        return this.audioEat;
+    }
+    
+    public set AudioEat(audioEat : AudioSource) {
+        this.audioEat = audioEat;
     }
 
     public set ScoreText(scoreText : Label) {
