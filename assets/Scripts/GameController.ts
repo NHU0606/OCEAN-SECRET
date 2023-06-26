@@ -6,6 +6,7 @@ import { FishPrefabController } from './FishPrefabController';
 import { AudioController } from './AudioController';
 import { ScoreController } from './ScoreController';
 import { ResultController } from './ResultController';
+import { JoyStickController } from './JoyStickController';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameController')
@@ -13,10 +14,13 @@ export class GameController extends Component {
     private variableVolume: number;
     private variableVolumeArray: number[] = [];
     private convertVolume: number;
+    private time: number;
 
     @property({type:CCInteger})
     private totalTime: number = 30;
-    private time: number;
+
+    @property({type: JoyStickController})
+    private joyStick: JoyStickController;
 
     @property({type: ResultController})
     private result: ResultController;
@@ -53,6 +57,10 @@ export class GameController extends Component {
     @property({type: Label})
     private timeLabel: Label;
 
+    private spawnInterval: number = 20;
+    private smallSizeRange: number[] = [0.3, 0.5];
+    private largeSizeRange: number[] = [0.3, 1];
+
     protected onLoad() : void  {
         director.resume();
         const audioSrc = this.node.getComponent(AudioSource)
@@ -60,10 +68,30 @@ export class GameController extends Component {
     }
 
     protected spawnFish(): void {
-        const randomFishIndex = randomRangeInt(0,this.GameModel.FishPrefabs.length);
-        const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
-        const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
-        fishNode.Init(this.GameModel.Fish2Contain);
+        const elapsedTime = this.totalTime - this.time;
+        let sizeRange: number[];
+    
+        if (elapsedTime < this.spawnInterval) {
+            sizeRange = this.smallSizeRange;
+        } else {
+            sizeRange = this.largeSizeRange;
+        }
+    
+        if (this.GameModel.Fish2Contain.children.length < 30) {
+            const randomFishIndex = randomRangeInt(0, this.GameModel.FishPrefabs.length);
+            const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
+            const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
+            const randomSize = math.randomRange(sizeRange[0], sizeRange[1]);
+            fishNode.node.scale = new Vec3(randomSize, -randomSize, 1);
+            fishNode.Init(this.GameModel.Fish2Contain);
+        }
+
+        // if (this.GameModel.Fish2Contain.children.length < 30) {
+        //     const randomFishIndex = randomRangeInt(0,this.GameModel.FishPrefabs.length);
+        //     const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
+        //     const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
+        //     fishNode.Init(this.GameModel.Fish2Contain);
+        // }
     }
 
     protected start(): void {
@@ -80,8 +108,7 @@ export class GameController extends Component {
 
         this.schedule(function(){
             this.spawnFish();
-        //}, math.randomRangeInt(3, 7))  
-    }, math.randomRangeInt(1, 2))
+        }, math.randomRangeInt(3, 7));
 
         var getVolumne = sys.localStorage.getItem('volume')
 
@@ -137,9 +164,10 @@ export class GameController extends Component {
         this.iconOff.node.active = false;
         this.pause.node.active = false;
         this.score.node.active = false;
-        this.GameModel.Fish2Contain.active   = false;
+        this.GameModel.Fish2Contain.active = false;
         this.timeLabel.node.active = false;
         this.result.showResult();
+        this.joyStick.hideStick();
     }
     
     protected onBeginContact(
@@ -159,6 +187,7 @@ export class GameController extends Component {
             this.score.node.active = false;
             this.timeLabel.node.active = false;
             this.mariaController.node.active = false;
+            this.joyStick.hideStick();
             this.result.showResult();
             this.GameModel.Fish2Contain.active = false;
         } else if (Math.abs(mariaSize) > otherFishSize){
@@ -192,7 +221,7 @@ export class GameController extends Component {
                 scoreIncrement = 6;
             } else if (otherFishSize >= 0.7 && otherFishSize < 0.8) {
                 scoreIncrement = 7;
-            } else if (otherFishSize >= 0.8 && otherFishSize < 0.9) {
+            } else if (otherFishSize >= 0.8) {
                 scoreIncrement = 8;
             }
             this.score.addScore(scoreIncrement);

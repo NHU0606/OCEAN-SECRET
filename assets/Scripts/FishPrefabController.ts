@@ -8,22 +8,23 @@ enum FishDirection {
 
 @ccclass('FishPrefabController')
 export class FishPrefabController extends Component {
-    private fishSpeed: number = math.randomRangeInt(50, 150);
+    private fishSpeed: number = math.randomRangeInt(100, 200);
     private curDirection: FishDirection = FishDirection.Left;
     private directionChangeDelay: number = 8;
-    private randomSize: number = math.randomRange(Math.abs(0.1), Math.abs(1.0));
+    private randomSizeBig: number;
+    // private randomSizeSmall: number = math.randomRange(Math.abs(0.25), Math.abs(0.5));
+    
     private directionChangeTime: number = 0;
 
     public Init(parent: Node): void {
-        this.node.scale = new Vec3(this.randomSize, this.randomSize*-1, 1);
+        // this.node.scale = new Vec3(this.randomSizeSmall, this.randomSizeSmall*-1, 1);
         parent.addChild(this.node);
-        console.log(this.node.position)
     }
     
     protected start(): void {      
         const fishCollider = this.node.getComponent(Collider2D);
         if (fishCollider) {
-            fishCollider.node.position = new Vec3(math.randomRangeInt(-500, 0),math.randomRangeInt(-270, 100),0);
+            fishCollider.node.position = new Vec3(math.randomRangeInt(-500, -490),math.randomRangeInt(-300, 180),0);
             fishCollider.apply();
         }
     }

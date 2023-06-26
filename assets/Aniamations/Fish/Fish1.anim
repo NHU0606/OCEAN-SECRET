@@ -11,7 +11,7 @@
     "speed": 0.2,
     "wrapMode": 2,
     "enableTrsBlending": false,
-    "_duration": 0.15,
+    "_duration": 0.31666666666666665,
     "_hash": 500763545,
     "_tracks": [
       {
@@ -122,20 +122,55 @@
     "__type__": "cc.ObjectCurve",
     "_times": [
       0,
+      0.03333333333333333,
       0.06666666666666667,
-      0.13333333333333333
+      0.1,
+      0.13333333333333333,
+      0.16666666666666666,
+      0.2,
+      0.23333333333333334,
+      0.26666666666666666,
+      0.3
     ],
     "_values": [
       {
-        "__uuid__": "556e5e30-d437-48b8-92db-67f4d55566a5@f9941",
+        "__uuid__": "f596a3c2-e6b2-4da2-8779-e598aba40e3a@f9941",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "21c35e75-ad4f-479e-9889-3b423ac3ad87@f9941",
+        "__uuid__": "07da4b5e-36cf-41d9-8fd7-95e6c2e1589e@f9941",
         "__expectedType__": "cc.SpriteFrame"
       },
       {
-        "__uuid__": "16fc8264-2740-4007-8a67-9cf2b32d5e4b@f9941",
+        "__uuid__": "8c03307f-17bd-49db-ba74-501481899e87@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "da01bd8d-ec02-4993-abdc-9b90d6638693@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "cef75006-2505-40fd-9b68-a2b9e422e407@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "7bf545f3-2d26-4607-a391-652e7dc469d0@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "911e49f5-5b50-417f-a08e-1bf866322efb@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "6c0ab49d-c468-4449-8df2-3390eb2582a8@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "1b365a67-db97-42e6-9218-1077b4fc23f2@f9941",
+        "__expectedType__": "cc.SpriteFrame"
+      },
+      {
+        "__uuid__": "f7226b2d-5814-4401-b1ab-557f67cd971b@f9941",
         "__expectedType__": "cc.SpriteFrame"
       }
     ]

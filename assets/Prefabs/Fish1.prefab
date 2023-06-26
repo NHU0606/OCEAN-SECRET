@@ -40,8 +40,8 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
+      "x": -206.508,
+      "y": 190.511,
       "z": 0
     },
     "_lrot": {
@@ -116,7 +116,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "556e5e30-d437-48b8-92db-67f4d55566a5@f9941",
+      "__uuid__": "f596a3c2-e6b2-4da2-8779-e598aba40e3a@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,

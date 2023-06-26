@@ -263,7 +263,7 @@
     "_priority": 0,
     "_fov": 45,
     "_fovAxis": 0,
-    "_orthoHeight": 320,
+    "_orthoHeight": 443.943661971831,
     "_near": 0,
     "_far": 1000,
     "_color": {
@@ -720,7 +720,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 708.75,
-      "height": 130.4
+      "height": 170.4
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -748,7 +748,7 @@
       "b": 255,
       "a": 255
     },
-    "_string": "U'll become the Maria\nTry to eat the fish are smaller than u\nIf u touch with bigger fish so u will die",
+    "_string": "U'll become the Maria\nUSE ARROW KEY TO MOVE\nTry to eat the fish are smaller than u\nIf u touch with bigger fish so u will die",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 35,
@@ -1071,7 +1071,7 @@
     },
     "_loop": true,
     "_playOnAwake": true,
-    "_volume": 1,
+    "_volume": 0.6,
     "_id": "a3OQM+2bxLOqUw7fPqPRSP"
   },
   {
