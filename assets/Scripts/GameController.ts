@@ -57,14 +57,15 @@ export class GameController extends Component {
     @property({type: Label})
     private timeLabel: Label;
 
-    private spawnInterval: number = 20;
-    private smallSizeRange: number[] = [0.3, 0.5];
-    private largeSizeRange: number[] = [0.3, 1];
+    private spawnInterval: number = 30;
+    private smallSizeRange: number[] = [0.6, 0.8];
+    private largeSizeRange: number[] = [0.3, 0.85];
 
     protected onLoad() : void  {
         director.resume();
         const audioSrc = this.node.getComponent(AudioSource)
         this.GameModel.AudioBackGround = audioSrc;
+        this.audioController.audioLose.node.active = false;
     }
 
     protected spawnFish(): void {
@@ -77,7 +78,7 @@ export class GameController extends Component {
             sizeRange = this.largeSizeRange;
         }
     
-        if (this.GameModel.Fish2Contain.children.length < 30) {
+        if (this.GameModel.Fish2Contain.children.length < 20) {
             const randomFishIndex = randomRangeInt(0, this.GameModel.FishPrefabs.length);
             const fishPrefab = this.GameModel.FishPrefabs[randomFishIndex];
             const fishNode = instantiate(fishPrefab).getComponent(FishPrefabController);
@@ -189,12 +190,13 @@ export class GameController extends Component {
             this.mariaController.node.active = false;
             this.joyStick.hideStick();
             this.result.showResult();
+            this.audioController.playLoseAudio();
             this.GameModel.Fish2Contain.active = false;
         } else if (Math.abs(mariaSize) > otherFishSize){
             this.GameModel.AudioEat.play();
             otherNode.destroy();
             //make size of maria bigger
-            let scaleFactor = 0.001;
+            let scaleFactor = 0.01;
             if (mariaSize > 0) {
                 mariaSize += scaleFactor;
                 mariaNode.setScale(mariaSize, Math.abs(mariaNode.scale.y + scaleFactor), 0);

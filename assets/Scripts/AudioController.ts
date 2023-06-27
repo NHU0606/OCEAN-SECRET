@@ -24,6 +24,9 @@ export class AudioController extends Component {
     @property(AudioSource)
     public audioEat: AudioSource = null;
 
+    @property(AudioSource)
+    public audioLose: AudioSource = null;
+
     public get IconToShow() : Sprite {
         return this.iconToShow;
     }
@@ -58,8 +61,10 @@ export class AudioController extends Component {
         if (this.isMuted) {
             this.audioBackground.volume = 0;
             this.audioEat.volume = 0;
+            this.audioLose.volume = 0;
         } else {
             this.audioEat.volume = 1;
+            this.audioLose.volume = 1;
             this.audioBackground.volume = 1;
         }               
     }  
@@ -76,12 +81,19 @@ export class AudioController extends Component {
 
     playAudio() {
         this.audioEat.volume = 1;
+        this.audioLose.volume = 1;
         this.audioBackground.volume = 1;
-
     }
 
     pauseAudio() {
         this.audioEat.volume = 0;
         this.audioBackground.volume = 0;
-    }    
+        this.audioLose.volume = 0;
+        this.audioLose.node.active = false;
+    }  
+    
+    playLoseAudio() {
+        this.audioLose.play();
+        this.audioBackground.volume = 0;
+    }
 }
