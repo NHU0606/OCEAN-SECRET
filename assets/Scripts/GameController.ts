@@ -58,7 +58,7 @@ export class GameController extends Component {
     private timeLabel: Label;
 
     private spawnInterval: number = 30;
-    private smallSizeRange: number[] = [0.6, 0.8];
+    private smallSizeRange: number[] = [0.28, 0.55];
     private largeSizeRange: number[] = [0.3, 0.85];
 
     protected onLoad() : void  {
